@@ -50,6 +50,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(alertControll, animated: true, completion: nil)
     }
     
+    // 全削除ボタン押下処理
     @IBAction func dellAllButtonAction(_ sender: Any) {
         print("Dellet All Button!!")
         let alertControll = UIAlertController(title: "リスト全削除", message: "リストを全て消しますがよろしいですか？", preferredStyle: UIAlertController.Style.alert)
@@ -68,6 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(alertControll, animated: true, completion: nil)
     }
     
+    // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = self.todoList[indexPath.row]
@@ -84,9 +86,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    // 表示するタイミングの件数
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
         return self.todoList.count
+    }
+    // 行を選択
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedTrail = indexPath.row
+        print("選択業：\(selectedTrail)")
+    }
+    
+    // セルの選択解除直後
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
