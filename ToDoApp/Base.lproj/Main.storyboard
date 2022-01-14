@@ -31,6 +31,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="ToDoリスト" id="zt4-tl-ik7">
+                        <barButtonItem key="leftBarButtonItem" title="alldell" image="trash.fill" catalog="system" id="l3C-dl-aya"/>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="VAT-QZ-bJy">
                             <connections>
                                 <action selector="addButtonAction:" destination="BYZ-38-t0r" id="nf1-HO-K7T"/>
@@ -66,6 +67,7 @@
     </scenes>
     <resources>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="trash.fill" catalog="system" width="121" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

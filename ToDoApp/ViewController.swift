@@ -29,6 +29,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.dataSource = self
     }
     
+    // ＋ボタン押下処理
     @IBAction func addButtonAction(_ sender: Any) {
         let alertControll = UIAlertController(title: "TODO追加", message: "TODOを入力してください。", preferredStyle: UIAlertController.Style.alert)
         alertControll.addTextField(configurationHandler: nil)
@@ -50,6 +51,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(alertControll, animated: true, completion: nil)
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = self.todoList[indexPath.row]
@@ -65,7 +67,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.userDefaults.set(todoList, forKey: self.todoKey)
         }
     }
-
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
