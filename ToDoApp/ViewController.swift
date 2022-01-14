@@ -21,7 +21,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         if let storedTodoList = userDefaults.array(forKey: self.todoKey) as? [String] {
-            print(storedTodoList)
             todoList.append(contentsOf: storedTodoList)
         }
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -51,6 +50,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(alertControll, animated: true, completion: nil)
     }
     
+    @IBAction func dellAllButtonAction(_ sender: Any) {
+        print("Dellet All Button!!")
+        let alertControll = UIAlertController(title: "リスト全削除", message: "リストを全て消しますがよろしいですか？", preferredStyle: UIAlertController.Style.alert)
+        let cencel = UIAlertAction(title: "キャンセル",
+                                   style: UIAlertAction.Style.cancel,
+                                   handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default,
+                                     handler: {(action: UIAlertAction) in
+            self.todoList.removeAll() // リスト削除
+            self.userDefaults.removeAll() // userdb削除
+            self.tableView.reloadData() // tableViewをリロード
+        })
+        
+        alertControll.addAction(okAction)
+        alertControll.addAction(cencel)
+        present(alertControll, animated: true, completion: nil)
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
@@ -74,3 +90,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 }
 
+extension UserDefaults {
+    func removeAll() {
+        dictionaryRepresentation().forEach({ removeObject(forKey: $0.key) })
+    }
+}
