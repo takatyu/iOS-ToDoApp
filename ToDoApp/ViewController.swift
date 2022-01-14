@@ -11,6 +11,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tableView: UITableView!
     
+    var todoList: [String] = ["TestTODO"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -22,8 +24,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func addButtonAction(_ sender: Any) {
         let alertControll = UIAlertController(title: "TODO追加", message: "TODOを入力してください。", preferredStyle: UIAlertController.Style.alert)
         alertControll.addTextField(configurationHandler: nil)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {(action: UIAlertAction) in
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default,
+                                     handler: {(action: UIAlertAction) in
             // OKタップ処理
+            if let texteField = alertControll.textFields?[0] {
+                //
+                self.todoList.insert(texteField.text!, at: 0)
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)],
+                                          with: UITableView.RowAnimation.right)
+            }
         })
         alertControll.addAction(okAction)
         let cancelButton = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: nil)
@@ -31,16 +40,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(alertControll, animated: true, completion: nil)
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "\(indexPath.row)番目"
+        cell.textLabel?.text = self.todoList[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
-        return 10
+        return self.todoList.count
     }
 }
 
