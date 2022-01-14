@@ -20,6 +20,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func addButtonAction(_ sender: Any) {
+        let alertControll = UIAlertController(title: "TODO追加", message: "TODOを入力してください。", preferredStyle: UIAlertController.Style.alert)
+        alertControll.addTextField(configurationHandler: nil)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {(action: UIAlertAction) in
+            // OKタップ処理
+        })
+        alertControll.addAction(okAction)
+        let cancelButton = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: nil)
+        alertControll.addAction(cancelButton)
+        present(alertControll, animated: true, completion: nil)
     }
     
     
