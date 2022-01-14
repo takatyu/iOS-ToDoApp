@@ -11,11 +11,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tableView: UITableView!
     
-    var todoList: [String] = ["TestTODO"]
+    let todoKey: String = "todoList"
+    // TODOリスト用
+    var todoList: [String] = []
+    // 簡易DB
+    let userDefaults: UserDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        if let storedTodoList = userDefaults.array(forKey: self.todoKey) as? [String] {
+            print(storedTodoList)
+            todoList.append(contentsOf: storedTodoList)
+        }
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -32,6 +40,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.todoList.insert(texteField.text!, at: 0)
                 self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)],
                                           with: UITableView.RowAnimation.right)
+                // TODOを保存
+                self.userDefaults.set(self.todoList, forKey: self.todoKey)
             }
         })
         alertControll.addAction(okAction)
@@ -46,10 +56,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    // セルの削除機能
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             todoList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            // 内容を保存
+            self.userDefaults.set(todoList, forKey: self.todoKey)
         }
     }
 
