@@ -58,7 +58,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                    style: UIAlertAction.Style.cancel,
                                    handler: nil)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default,
-                                     handler: {(action: UIAlertAction) in
+                                     handler: { (action: UIAlertAction) in
             self.todoList.removeAll() // リスト削除
             self.userDefaults.removeAll() // userdb削除
             self.tableView.reloadData() // tableViewをリロード
@@ -66,6 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         alertControll.addAction(okAction)
         alertControll.addAction(cencel)
+        //
         present(alertControll, animated: true, completion: nil)
     }
     
@@ -75,17 +76,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = self.todoList[indexPath.row]
         return cell
     }
-    
-    // セルの削除機能
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            todoList.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            // 内容を保存
-            self.userDefaults.set(todoList, forKey: self.todoKey)
-        }
-    }
-    
+
     // 表示するタイミングの件数
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
@@ -102,6 +93,48 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // 選択解除
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
+
+    // セルの削除機能 1-2を実装するとこちらは無効になるっぽい
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+//            todoList.remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+//            // 内容を保存
+//            self.userDefaults.set(todoList, forKey: self.todoKey)
+        }
+    }
+
+    // セル左から右へスワイプ 1-1
+    func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let closeAction = UIContextualAction(style: .normal,
+                                             title:  "Edit",
+                                             handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+            print("OK, marked as Closed")
+            success(true)
+
+        })
+        // closeAction.image = UIImage(named: "tick")
+        closeAction.backgroundColor = .blue
+        return UISwipeActionsConfiguration(actions: [closeAction])
+
+    }
+
+//    // セル右から左へスワイプ
+//    func tableView(_ tableView: UITableView,
+//                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let modifyAction = UIContextualAction(style: .normal,
+//                                              title:  "Update",
+//                                              handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
+//            print("Update action ...")
+//            success(true)
+//
+//        })
+//        // modifyAction.image = UIImage(named: "hammer")
+//        modifyAction.backgroundColor = .blue
+//        return UISwipeActionsConfiguration(actions: [modifyAction])
+//
+//    }
 }
 
 extension UserDefaults {
