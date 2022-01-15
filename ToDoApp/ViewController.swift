@@ -99,6 +99,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // セルの選択解除直後
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        // 選択解除
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }
