@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
     
     let todoKey: String = "todoList"
+    let indentCell: String = "cell"
     // TODOリスト用
     var todoList: [String] = []
     // 簡易DB
@@ -24,7 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if let storedTodoList = userDefaults.array(forKey: self.todoKey) as? [String] {
             todoList.append(contentsOf: storedTodoList)
         }
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.indentCell)
         self.tableView.delegate = self
         self.tableView.dataSource = self
     }
@@ -74,7 +75,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
         cell.textLabel?.text = self.todoList[indexPath.row]
         return cell
     }
@@ -84,11 +85,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // 表示するセルの数
         return self.todoList.count
     }
-    // 行を選択 => 今は不要
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let selectedTrail = indexPath.row
-//        print("選択業：\(selectedTrail)")
-//    }
     
     // セルの選択解除直後
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -158,4 +154,10 @@ extension UserDefaults {
     func removeAll() {
         dictionaryRepresentation().forEach({ removeObject(forKey: $0.key) })
     }
+}
+
+/** チェックボタン */
+struct checkButton {
+    let on: UIImage = UIImage(systemName: "circle.fill")!
+    let off: UIImage = UIImage(systemName: "circle")!
 }
