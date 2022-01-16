@@ -84,11 +84,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // 表示するセルの数
         return self.todoList.count
     }
-    // 行を選択
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedTrail = indexPath.row
-        print("選択業：\(selectedTrail)")
-    }
+    // 行を選択 => 今は不要
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let selectedTrail = indexPath.row
+//        print("選択業：\(selectedTrail)")
+//    }
     
     // セルの選択解除直後
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -103,7 +103,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let closeAction = UIContextualAction(style: .normal,
                                              title:  "Edit",
                                              handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
-            print("OK, marked as Closed")
+            // アラート・編集画面表示
+            let alertControll = UIAlertController(title: "TODO編集",
+                                                  message: "TODOを入力してください。",
+                                                  preferredStyle: UIAlertController.Style.alert)
+            alertControll.addTextField {(textFiled: UITextField) in
+                textFiled.text = self.todoList[indexPath.row]
+            }
+            let cancelButton = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: nil)
+            let okAction = UIAlertAction(title: "OK",
+                                         style: UIAlertAction.Style.default,
+                                         handler: {(action: UIAlertAction) in
+                // OKタップ処理
+                guard let textFields = alertControll.textFields else { return }
+                if let texteField = textFields[0].text!.isEmpty ? nil : textFields[0].text {
+                    // セルをリロード
+                    self.todoList[indexPath.row] = texteField
+                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                    // TODOを保存
+                    self.userDefaults.set(self.todoList, forKey: self.todoKey)
+                }
+            })
+            
+            alertControll.addAction(okAction)
+            alertControll.addAction(cancelButton)
+            self.present(alertControll, animated: true, completion: nil)
             success(true)
 
         })
