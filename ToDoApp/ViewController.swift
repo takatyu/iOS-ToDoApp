@@ -30,14 +30,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // ＋ボタン押下処理
     @IBAction func addButtonAction(_ sender: Any) {
-        let alertControll = UIAlertController(title: "TODO追加", message: "TODOを入力してください。", preferredStyle: UIAlertController.Style.alert)
+        let alertControll = UIAlertController(title: "TODO追加",
+                                              message: "TODOを入力してください。",
+                                              preferredStyle: UIAlertController.Style.alert)
         alertControll.addTextField(configurationHandler: nil)
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default,
                                      handler: {(action: UIAlertAction) in
             // OKタップ処理
-            if let texteField = alertControll.textFields?[0] {
-                //
-                self.todoList.insert(texteField.text!, at: 0)
+            guard let textFields = alertControll.textFields else { return }
+            if let texteField = textFields[0].text!.isEmpty ? nil : textFields[0].text {
+                self.todoList.insert(texteField, at: 0)
                 self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)],
                                           with: UITableView.RowAnimation.right)
                 // TODOを保存
@@ -94,17 +96,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    // セルの削除機能 1-2を実装するとこちらは無効になるっぽい
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-//            todoList.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-//            // 内容を保存
-//            self.userDefaults.set(todoList, forKey: self.todoKey)
-        }
-    }
-
     // セル左から右へスワイプ 1-1
+    // Inherited from UITableViewDelegate
     func tableView(_ tableView: UITableView,
                    leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let closeAction = UIContextualAction(style: .normal,
@@ -114,27 +107,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             success(true)
 
         })
-        // closeAction.image = UIImage(named: "tick")
+        closeAction.image = UIImage(systemName: "square.and.pencil")
         closeAction.backgroundColor = .blue
         return UISwipeActionsConfiguration(actions: [closeAction])
-
     }
 
-//    // セル右から左へスワイプ
-//    func tableView(_ tableView: UITableView,
-//                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let modifyAction = UIContextualAction(style: .normal,
-//                                              title:  "Update",
-//                                              handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
-//            print("Update action ...")
-//            success(true)
-//
-//        })
-//        // modifyAction.image = UIImage(named: "hammer")
-//        modifyAction.backgroundColor = .blue
-//        return UISwipeActionsConfiguration(actions: [modifyAction])
-//
-//    }
+    // セル右から左へスワイプ
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive,
+                                        title: "削除",
+                                        handler: { ( _, _, handler) in
+            //処理
+            print("Delete swip!")
+            self.todoList.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            // 内容を保存
+            self.userDefaults.set(self.todoList, forKey: self.todoKey)
+            handler(true)
+        })
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
 }
 
 extension UserDefaults {
