@@ -14,16 +14,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let todoKey: String = "todoList"
     let indentCell: String = "cell"
+    let onImage: UIImage = UIImage(systemName: "circle.inset.filled")!
+    let offImage: UIImage = UIImage(systemName: "circle")!
     // TODOリスト用
-    var todoList: [String] = []
+    var todoList: [TodoStruct] = [TodoStruct]()
     // 簡易DB
     let userDefaults: UserDefaults = UserDefaults.standard
     
+    // 初期表示処理
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        if let storedTodoList = userDefaults.array(forKey: self.todoKey) as? [String] {
-            todoList.append(contentsOf: storedTodoList)
+        
+        if let saveDate = self.userDefaults.data(forKey: self.todoKey) {
+            let jsonDecode = JSONDecoder()
+            if let dataList = try? jsonDecode.decode([TodoStruct].self, from: saveDate) {
+                self.todoList = dataList
+            }
         }
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.indentCell)
         self.tableView.delegate = self
@@ -41,11 +47,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             // OKタップ処理
             guard let textFields = alertControll.textFields else { return }
             if let texteField = textFields[0].text!.isEmpty ? nil : textFields[0].text {
-                self.todoList.insert(texteField, at: 0)
+                let todoStruct = TodoStruct(text: texteField, imageFlg: false)
+                self.todoList.insert(todoStruct, at: 0)
                 self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)],
                                           with: UITableView.RowAnimation.right)
                 // TODOを保存
-                self.userDefaults.set(self.todoList, forKey: self.todoKey)
+                self.save(object: self.todoList, key: self.todoKey)
             }
         })
         alertControll.addAction(okAction)
@@ -76,20 +83,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
-        cell.textLabel?.text = self.todoList[indexPath.row]
+        let todo = self.todoList[indexPath.row]
+        cell.textLabel?.text = todo.text
+//        let cg = cell.imageView?.frame
+//        cell.imageView?.image = todo.imageFlg ? self.onImage : self.offImage
+//        cell.imageView?.isUserInteractionEnabled = true
+//        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
         return cell
     }
 
     // 表示するタイミングの件数
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
+        print("cell count: \(self.todoList.count)")
         return self.todoList.count
-    }
-    
-    // セルの選択解除直後
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        // 選択解除
-        self.tableView.deselectRow(at: indexPath, animated: true)
     }
 
     // セル左から右へスワイプ 1-1
@@ -104,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                                   message: "TODOを入力してください。",
                                                   preferredStyle: UIAlertController.Style.alert)
             alertControll.addTextField {(textFiled: UITextField) in
-                textFiled.text = self.todoList[indexPath.row]
+                textFiled.text = self.todoList[indexPath.row].text
             }
             let cancelButton = UIAlertAction(title: "キャンセル", style: UIAlertAction.Style.cancel, handler: nil)
             let okAction = UIAlertAction(title: "OK",
@@ -114,10 +121,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 guard let textFields = alertControll.textFields else { return }
                 if let texteField = textFields[0].text!.isEmpty ? nil : textFields[0].text {
                     // セルをリロード
-                    self.todoList[indexPath.row] = texteField
+                    self.todoList[indexPath.row].text = texteField
                     self.tableView.reloadRows(at: [indexPath], with: .automatic)
                     // TODOを保存
-                    self.userDefaults.set(self.todoList, forKey: self.todoKey)
+                    self.save(object: self.todoList, key: self.todoKey)
                 }
             })
             
@@ -139,14 +146,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                         title: "削除",
                                         handler: { ( _, _, handler) in
             //処理
-            print("Delete swip!")
             self.todoList.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            // 内容を保存
-            self.userDefaults.set(self.todoList, forKey: self.todoKey)
+            // TODOを保存
+            self.save(object: self.todoList, key: self.todoKey)
             handler(true)
         })
         return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
+    // UserDefaultsにData型で保存
+    private func save<T: Encodable>(object: T, key: String) {
+        let jsonEcode = JSONEncoder()
+        guard let data = try? jsonEcode.encode(object) else {
+            return
+        }
+        self.userDefaults.set(data, forKey: key)
+    }
+    
+    // imageTapp
+    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
+        print("タップ")
     }
 }
 
@@ -156,8 +176,8 @@ extension UserDefaults {
     }
 }
 
-/** チェックボタン */
-struct checkButton {
-    let on: UIImage = UIImage(systemName: "circle.fill")!
-    let off: UIImage = UIImage(systemName: "circle")!
+/** TODO構造体 */
+struct TodoStruct: Codable {
+    var text: String
+    var imageFlg: Bool
 }
