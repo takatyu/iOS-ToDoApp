@@ -2,7 +2,8 @@
 //  ViewController.swift
 //  ToDoApp
 //
-//  Created by tkMBA on 2022/01/14.
+//  Created by Hiroshi Takai on 2022/01/16.
+//  Copyright © 2022 ProjectStage, Inc. All rights reserved.
 //
 
 import UIKit
@@ -68,7 +69,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         alertControll.addAction(okAction)
         alertControll.addAction(cencel)
-        //
         present(alertControll, animated: true, completion: nil)
     }
     
