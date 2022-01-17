@@ -13,7 +13,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
     
     let todoKey: String = "todoList"
-    let indentCell: String = "cell"
+    let indentCell: String = "tableCell"
     let onImage: UIImage = UIImage(systemName: "circle.inset.filled")!
     let offImage: UIImage = UIImage(systemName: "circle")!
     // TODOリスト用
@@ -83,8 +83,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
-        let todo = self.todoList[indexPath.row]
-        cell.textLabel?.text = todo.text
+        // let todo = self.todoList[indexPath.row]
+        let width = cell.contentView.frame.width
+        let height = cell.contentView.frame.height
+        print("whidth: \(width)  height: \(height)")
+//        cell.textLabel?.text = todo.text
 //        let cg = cell.imageView?.frame
 //        cell.imageView?.image = todo.imageFlg ? self.onImage : self.offImage
 //        cell.imageView?.isUserInteractionEnabled = true
