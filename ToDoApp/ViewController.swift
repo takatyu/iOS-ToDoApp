@@ -12,6 +12,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tableView: UITableView!
     
+    
+    
     let todoKey: String = "todoList"
     let indentCell: String = "tableCell"
     let onImage: UIImage = UIImage(systemName: "circle.inset.filled")!
@@ -31,9 +33,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.todoList = dataList
             }
         }
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: self.indentCell)
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.allowsSelection = false // 選択不可
+        // 左にチェックボックスを設定
+//        self.tableView.allowsMultipleSelectionDuringEditing = true
+//        self.tableView.setEditing(true, animated: false)
     }
     
     // ＋ボタン押下処理
@@ -83,22 +88,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
-        // let todo = self.todoList[indexPath.row]
-        let width = cell.contentView.frame.width
-        let height = cell.contentView.frame.height
-        print("whidth: \(width)  height: \(height)")
-//        cell.textLabel?.text = todo.text
-//        let cg = cell.imageView?.frame
-//        cell.imageView?.image = todo.imageFlg ? self.onImage : self.offImage
-//        cell.imageView?.isUserInteractionEnabled = true
-//        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
-        return cell
+        let todo = self.todoList[indexPath.row]
+        return self.setTableCell(cell, todoObj: todo)
     }
-
+    
     // 表示するタイミングの件数
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // 表示するセルの数
-        print("cell count: \(self.todoList.count)")
+        // print("numberOfRowsInSection cell count: \(self.todoList.count)")
         return self.todoList.count
     }
 
@@ -165,6 +162,40 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return
         }
         self.userDefaults.set(data, forKey: key)
+    }
+    
+    private func setTableCell(_ cell: UITableViewCell, todoObj todo: TodoStruct) -> UITableViewCell {
+        let width = cell.contentView.frame.width
+        let height = cell.contentView.frame.height
+        print("cellForRowAt whidth: \(width)  height: \(height)")
+        let originX = cell.frame.origin.x + cell.frame.width
+        print("img x: \(cell.frame.origin.x) w: \(cell.frame.width) X+W: \(width - originX)")
+        print("text: \(todo.text)")
+        
+        let imgView = UIImageView(image: self.offImage)
+        imgView.contentMode = .scaleAspectFit
+        let cgrec: CGRect = CGRect(x: 10.0, y:(13.0 / 2), width: 40.0, height: (height - 13.0))
+        imgView.frame = cgrec
+        imgView.isUserInteractionEnabled = true
+        imgView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
+        cell.addSubview(imgView)
+        
+        let label = UILabel()
+        label.frame = CGRect(x: 50.0, y: 0, width: width - 50.0, height: height)
+        label.numberOfLines = 0
+        label.text = todo.text
+        cell.addSubview(label)
+//        let addbutton = UIButton()
+//        addbutton.tag = indexPath.row
+//        addbutton.imageView?.image = self.offImage
+//        addbutton.addTarget(self, action: #selector(buttonEvent), for: UIControl.Event.touchUpInside)
+//        addbutton.frame = CGRect(x:0, y:0, width:50, height: 50)
+//        cell.addSubview(addbutton)
+//        let cg = cell.imageView?.frame
+//        cell.imageView?.image = todo.imageFlg ? self.onImage : self.offImage
+//        cell.imageView?.isUserInteractionEnabled = true
+//        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
+        return cell
     }
     
     // imageTapp
