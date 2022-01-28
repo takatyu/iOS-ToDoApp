@@ -35,7 +35,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.allowsSelection = false // 選択不可
+        // self.tableView.allowsSelection = false // 選択不可
         // 左にチェックボックスを設定
 //        self.tableView.allowsMultipleSelectionDuringEditing = true
 //        self.tableView.setEditing(true, animated: false)
@@ -88,8 +88,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
+        // 指定行のcell.contentView.subviewsを全て削除
+        cell.contentView.subviews.forEach({
+            $0.removeFromSuperview()
+        })
         let todo = self.todoList[indexPath.row]
-        return self.setTableCell(cell, todoObj: todo)
+        return self.setTableCell(cell, todo, indexPath)
     }
     
     // 表示するタイミングの件数
@@ -155,6 +159,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return UISwipeActionsConfiguration(actions: [delete])
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false) // セル選択無効
+        self.todoList[indexPath.row].imageFlg = true // todoボタンON
+        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+        print("選択行更新 \(indexPath.row)")
+    }
+    
     // UserDefaultsにData型で保存
     private func save<T: Encodable>(object: T, key: String) {
         let jsonEcode = JSONEncoder()
@@ -164,44 +175,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.userDefaults.set(data, forKey: key)
     }
     
-    private func setTableCell(_ cell: UITableViewCell, todoObj todo: TodoStruct) -> UITableViewCell {
+    private func setTableCell(_ cell: UITableViewCell, _ todo: TodoStruct, _ indexPath: IndexPath ) -> UITableViewCell {
         let width = cell.contentView.frame.width
         let height = cell.contentView.frame.height
         print("cellForRowAt whidth: \(width)  height: \(height)")
-        let originX = cell.frame.origin.x + cell.frame.width
-        print("img x: \(cell.frame.origin.x) w: \(cell.frame.width) X+W: \(width - originX)")
-        print("text: \(todo.text)")
+        print("imgFlg: \(todo.imageFlg)")
         
-        let imgView = UIImageView(image: self.offImage)
+        let imgView = UIImageView(image: todo.imageFlg ? self.onImage : self.offImage)
         imgView.contentMode = .scaleAspectFit
         let cgrec: CGRect = CGRect(x: 10.0, y:(13.0 / 2), width: 40.0, height: (height - 13.0))
         imgView.frame = cgrec
-        imgView.isUserInteractionEnabled = true
-        imgView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
-        cell.addSubview(imgView)
+        imgView.tag = 1
+        cell.contentView.addSubview(imgView)
         
         let label = UILabel()
         label.frame = CGRect(x: 50.0, y: 0, width: width - 50.0, height: height)
         label.numberOfLines = 0
+        label.tag = 2
         label.text = todo.text
-        cell.addSubview(label)
-//        let addbutton = UIButton()
-//        addbutton.tag = indexPath.row
-//        addbutton.imageView?.image = self.offImage
-//        addbutton.addTarget(self, action: #selector(buttonEvent), for: UIControl.Event.touchUpInside)
-//        addbutton.frame = CGRect(x:0, y:0, width:50, height: 50)
-//        cell.addSubview(addbutton)
-//        let cg = cell.imageView?.frame
-//        cell.imageView?.image = todo.imageFlg ? self.onImage : self.offImage
-//        cell.imageView?.isUserInteractionEnabled = true
-//        cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:))))
+        cell.contentView.addSubview(label)
         return cell
     }
     
     // imageTapp
-    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
-        print("タップ")
-    }
+//    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
+//        print("タップ")
+//        let touch = sender.location(in: self.tableView)
+//        if let indexPath = self.tableView.indexPathForRow(at: touch){
+//            let cell = self.tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
+//            let img = cell.imageView?.image
+//            print("\(img)")
+//        }
+//    }
 }
 
 extension UserDefaults {
@@ -212,6 +217,6 @@ extension UserDefaults {
 
 /** TODO構造体 */
 struct TodoStruct: Codable {
-    var text: String
-    var imageFlg: Bool
+    var text: String = ""
+    var imageFlg: Bool = false
 }
