@@ -103,7 +103,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return self.todoList.count
     }
 
-    // セル左から右へスワイプ 1-1
+    // セル左から右へスワイプ(編集モード、変更保存)
     // Inherited from UITableViewDelegate
     func tableView(_ tableView: UITableView,
                    leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -159,9 +159,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return UISwipeActionsConfiguration(actions: [delete])
     }
     
+    // セルの選択とTODOボタン更新
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false) // セル選択無効
         self.todoList[indexPath.row].imageFlg = true // todoボタンON
+        
         tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
         print("選択行更新 \(indexPath.row)")
     }
