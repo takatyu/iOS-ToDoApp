@@ -12,8 +12,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tableView: UITableView!
     
-    
-    
     let todoKey: String = "todoList"
     let indentCell: String = "tableCell"
     let onImage: UIImage = UIImage(systemName: "circle.inset.filled")!
@@ -35,10 +33,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        // self.tableView.allowsSelection = false // 選択不可
         // 左にチェックボックスを設定
-//        self.tableView.allowsMultipleSelectionDuringEditing = true
-//        self.tableView.setEditing(true, animated: false)
+        // self.tableView.allowsMultipleSelectionDuringEditing = true
+        // self.tableView.setEditing(true, animated: false)
     }
     
     // ＋ボタン押下処理
@@ -93,7 +90,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             $0.removeFromSuperview()
         })
         let todo = self.todoList[indexPath.row]
-        return self.setTableCell(cell, todo, indexPath)
+        return self.setTableCell(cell, todo)
     }
     
     // 表示するタイミングの件数
@@ -162,10 +159,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルの選択とTODOボタン更新
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false) // セル選択無効
-        self.todoList[indexPath.row].imageFlg = true // todoボタンON
-        
+        let flg = self.todoList[indexPath.row].imageFlg
+        self.todoList[indexPath.row].imageFlg = flg ? false : true
+        // TODOを保存
+        self.save(object: self.todoList, key: self.todoKey)
+        // 選択行の更新
         tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-        print("選択行更新 \(indexPath.row)")
     }
     
     // UserDefaultsにData型で保存
@@ -177,11 +176,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.userDefaults.set(data, forKey: key)
     }
     
-    private func setTableCell(_ cell: UITableViewCell, _ todo: TodoStruct, _ indexPath: IndexPath ) -> UITableViewCell {
+    private func setTableCell(_ cell: UITableViewCell, _ todo: TodoStruct) -> UITableViewCell {
         let width = cell.contentView.frame.width
         let height = cell.contentView.frame.height
-        print("cellForRowAt whidth: \(width)  height: \(height)")
-        print("imgFlg: \(todo.imageFlg)")
+        print("w: \(width) h: \(height)")
         
         let imgView = UIImageView(image: todo.imageFlg ? self.onImage : self.offImage)
         imgView.contentMode = .scaleAspectFit
@@ -198,17 +196,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.contentView.addSubview(label)
         return cell
     }
-    
-    // imageTapp
-//    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
-//        print("タップ")
-//        let touch = sender.location(in: self.tableView)
-//        if let indexPath = self.tableView.indexPathForRow(at: touch){
-//            let cell = self.tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
-//            let img = cell.imageView?.image
-//            print("\(img)")
-//        }
-//    }
 }
 
 extension UserDefaults {
