@@ -33,6 +33,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.allowsSelection = false // 選択不可
         // 左にチェックボックスを設定
         // self.tableView.allowsMultipleSelectionDuringEditing = true
         // self.tableView.setEditing(true, animated: false)
@@ -85,11 +86,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // セルにリストを設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
-        // 指定行のcell.contentView.subviewsを全て削除
-//        cell.contentView.subviews.forEach({
-//            $0.removeFromSuperview()
-//        })
-        
         let todo = self.todoList[indexPath.row]
         return self.setTableCell(cell, todo)
     }
@@ -157,16 +153,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return UISwipeActionsConfiguration(actions: [delete])
     }
     
-    // セルの選択とTODOボタン更新
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false) // セル選択無効
-        let flg = self.todoList[indexPath.row].imageFlg
-        self.todoList[indexPath.row].imageFlg = flg ? false : true
-        // TODOを保存
-        self.save(object: self.todoList, key: self.todoKey)
-        // 選択行の更新
-        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-    }
+    // セルの選択したときのイベントアクション
+    // TODOボタン更新
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: false) // セル選択無効
+//        let flg = self.todoList[indexPath.row].imageFlg
+//        self.todoList[indexPath.row].imageFlg = flg ? false : true
+//        // TODOを保存
+//        self.save(object: self.todoList, key: self.todoKey)
+//        // 選択行の更新
+//        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+//    }
     
     // UserDefaultsにData型で保存
     private func save<T: Encodable>(object: T, key: String) {
@@ -182,27 +179,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let width = cell.contentView.frame.width
         let height = cell.contentView.frame.height
         print("w: \(width) h: \(height)")
-        
         let imgView = cell.contentView.viewWithTag(1) as! UIImageView
-        let label = cell.contentView.viewWithTag(2) as! UILabel
-        
-//        imgView = UIImageView(image: todo.imageFlg ? self.onImage : self.offImage)
-//        imgView.contentMode = .scaleAspectFit
-//        let cgrec: CGRect = CGRect(x: 10.0, y:(13.0 / 2), width: 40.0, height: (height - 13.0))
-//        imgView.frame = cgrec
-//        imgView.tag = 1
-//        cell.contentView.addSubview(imgView)
         imgView.image = todo.imageFlg ? self.onImage : self.offImage
-        
-//        let label = UILabel()
-//        print("Label w: \((width - 50.0))")
-//        label.frame = CGRect(x: 50.0, y: 0, width: (width - 50.0), height: height)
-//        label.numberOfLines = 0
-//        label.tag = 2
-//        label.text = todo.text
-//        cell.contentView.addSubview(label)
+        imgView.isUserInteractionEnabled = true
+        imgView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageTapped)))
+        let label = cell.contentView.viewWithTag(2) as! UILabel
         label.text = todo.text
         return cell
+    }
+    
+    // imageTapp
+    @objc func imageTapped(_ sender: UITapGestureRecognizer) {
+        print("タップ")
+        let tapLocation = sender.location(in: self.tableView)
+        if let indexPath = self.tableView.indexPathForRow(at: tapLocation) {
+            let flg = self.todoList[indexPath.row].imageFlg
+            self.todoList[indexPath.row].imageFlg = flg ? false : true
+            // TODOを保存
+            self.save(object: self.todoList, key: self.todoKey)
+            // 選択行の更新
+            tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+        }
     }
 }
 

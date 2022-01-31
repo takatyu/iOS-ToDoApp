@@ -28,7 +28,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="てすと" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6K-Yg-q5d">
-                                                    <rect key="frame" x="59" y="12" width="335" height="21"/>
+                                                    <rect key="frame" x="59" y="11" width="335" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -43,10 +43,10 @@
                                             <constraints>
                                                 <constraint firstItem="hSa-bd-UD2" firstAttribute="centerY" secondItem="D85-wj-mys" secondAttribute="centerY" constant="-1" id="14S-Kt-pfG"/>
                                                 <constraint firstItem="g6K-Yg-q5d" firstAttribute="trailing" secondItem="D85-wj-mys" secondAttribute="trailingMargin" id="CB4-bI-ZRo"/>
-                                                <constraint firstItem="g6K-Yg-q5d" firstAttribute="centerY" secondItem="D85-wj-mys" secondAttribute="centerY" id="CKl-OT-6Qo"/>
+                                                <constraint firstItem="g6K-Yg-q5d" firstAttribute="centerY" secondItem="D85-wj-mys" secondAttribute="centerY" constant="-1" id="CKl-OT-6Qo"/>
                                                 <constraint firstItem="g6K-Yg-q5d" firstAttribute="leading" secondItem="hSa-bd-UD2" secondAttribute="trailing" constant="7" id="PLZ-vu-Xop"/>
                                                 <constraint firstItem="hSa-bd-UD2" firstAttribute="top" secondItem="D85-wj-mys" secondAttribute="topMargin" constant="-6" id="ggO-Kp-f5N"/>
-                                                <constraint firstItem="g6K-Yg-q5d" firstAttribute="top" secondItem="D85-wj-mys" secondAttribute="topMargin" constant="1" id="lKm-eA-C2E"/>
+                                                <constraint firstItem="g6K-Yg-q5d" firstAttribute="top" secondItem="D85-wj-mys" secondAttribute="topMargin" id="lKm-eA-C2E"/>
                                                 <constraint firstItem="hSa-bd-UD2" firstAttribute="leading" secondItem="D85-wj-mys" secondAttribute="leadingMargin" id="p9e-uj-44c"/>
                                             </constraints>
                                         </tableViewCellContentView>
