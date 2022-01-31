@@ -86,9 +86,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: self.indentCell, for: indexPath)
         // 指定行のcell.contentView.subviewsを全て削除
-        cell.contentView.subviews.forEach({
-            $0.removeFromSuperview()
-        })
+//        cell.contentView.subviews.forEach({
+//            $0.removeFromSuperview()
+//        })
+        
         let todo = self.todoList[indexPath.row]
         return self.setTableCell(cell, todo)
     }
@@ -176,24 +177,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.userDefaults.set(data, forKey: key)
     }
     
+    // cell setting
     private func setTableCell(_ cell: UITableViewCell, _ todo: TodoStruct) -> UITableViewCell {
         let width = cell.contentView.frame.width
         let height = cell.contentView.frame.height
         print("w: \(width) h: \(height)")
         
-        let imgView = UIImageView(image: todo.imageFlg ? self.onImage : self.offImage)
-        imgView.contentMode = .scaleAspectFit
-        let cgrec: CGRect = CGRect(x: 10.0, y:(13.0 / 2), width: 40.0, height: (height - 13.0))
-        imgView.frame = cgrec
-        imgView.tag = 1
-        cell.contentView.addSubview(imgView)
+        let imgView = cell.contentView.viewWithTag(1) as! UIImageView
+        let label = cell.contentView.viewWithTag(2) as! UILabel
         
-        let label = UILabel()
-        label.frame = CGRect(x: 50.0, y: 0, width: width - 50.0, height: height)
-        label.numberOfLines = 0
-        label.tag = 2
+//        imgView = UIImageView(image: todo.imageFlg ? self.onImage : self.offImage)
+//        imgView.contentMode = .scaleAspectFit
+//        let cgrec: CGRect = CGRect(x: 10.0, y:(13.0 / 2), width: 40.0, height: (height - 13.0))
+//        imgView.frame = cgrec
+//        imgView.tag = 1
+//        cell.contentView.addSubview(imgView)
+        imgView.image = todo.imageFlg ? self.onImage : self.offImage
+        
+//        let label = UILabel()
+//        print("Label w: \((width - 50.0))")
+//        label.frame = CGRect(x: 50.0, y: 0, width: (width - 50.0), height: height)
+//        label.numberOfLines = 0
+//        label.tag = 2
+//        label.text = todo.text
+//        cell.contentView.addSubview(label)
         label.text = todo.text
-        cell.contentView.addSubview(label)
         return cell
     }
 }
