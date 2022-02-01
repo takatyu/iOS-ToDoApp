@@ -176,9 +176,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // cell setting
     private func setTableCell(_ cell: UITableViewCell, _ todo: TodoStruct) -> UITableViewCell {
-        let width = cell.contentView.frame.width
-        let height = cell.contentView.frame.height
-        print("w: \(width) h: \(height)")
+//        let width = cell.contentView.frame.width
+//        let height = cell.contentView.frame.height
+//        print("w: \(width) h: \(height)")
         let imgView = cell.contentView.viewWithTag(1) as! UIImageView
         imgView.image = todo.imageFlg ? self.onImage : self.offImage
         imgView.isUserInteractionEnabled = true
