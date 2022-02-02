@@ -16,6 +16,7 @@
 		E25D540727909534001C7E63 /* ToDoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D540627909534001C7E63 /* ToDoAppTests.swift */; };
 		E25D541127909534001C7E63 /* ToDoAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D541027909534001C7E63 /* ToDoAppUITests.swift */; };
 		E25D541327909534001C7E63 /* ToDoAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D541227909534001C7E63 /* ToDoAppUITestsLaunchTests.swift */; };
+		E298D28027A64B6A00AEC29E /* GroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E298D27F27A64B6A00AEC29E /* GroupViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		E25D540C27909534001C7E63 /* ToDoAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E25D541027909534001C7E63 /* ToDoAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoAppUITests.swift; sourceTree = "<group>"; };
 		E25D541227909534001C7E63 /* ToDoAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E298D27F27A64B6A00AEC29E /* GroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				E25D53EF27909532001C7E63 /* AppDelegate.swift */,
 				E25D53F127909532001C7E63 /* SceneDelegate.swift */,
 				E25D53F327909532001C7E63 /* ViewController.swift */,
+				E298D27F27A64B6A00AEC29E /* GroupViewController.swift */,
 				E25D53F527909532001C7E63 /* Main.storyboard */,
 				E25D53F827909534001C7E63 /* Assets.xcassets */,
 				E25D53FA27909534001C7E63 /* LaunchScreen.storyboard */,
@@ -260,6 +263,7 @@
 			files = (
 				E25D53F427909532001C7E63 /* ViewController.swift in Sources */,
 				E25D53F027909532001C7E63 /* AppDelegate.swift in Sources */,
+				E298D28027A64B6A00AEC29E /* GroupViewController.swift in Sources */,
 				E25D53F227909532001C7E63 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
