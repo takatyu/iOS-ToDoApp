@@ -40,5 +40,10 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-
+    
+    // 新規追加ボタンアクション
+    @IBAction func addButtonAction(_ sender: Any) {
+        print("追加ボタン押下")
+    }
+    
 }
