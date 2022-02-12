@@ -1,23 +1,26 @@
 //
-//  TodoGroupViewController.swift
+//  NewGroupViewController.swift
 //  ToDoApp
 //
-//  Created by Hiroshi Takai on 2022/01/30.
+//  Created by Hiroshi Takai on 2022/02/11.
 //  Copyright © 2022 ProjectStage, Inc. All rights reserved.
 //
 
 import UIKit
 
-class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class NewGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    @IBOutlet weak var completeButton: UIBarButtonItem!
     
-    @IBOutlet weak var gTableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.gTableView.delegate = self
-        self.gTableView.dataSource = self
+        completeButton.isEnabled = false // comleteButton disabled
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
 
@@ -32,7 +35,7 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
     */
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "groupCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "test"
         return cell
     }
@@ -41,9 +44,14 @@ class GroupViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return 1
     }
     
-    // 新規追加ボタンアクション
-    @IBAction func addButtonAction(_ sender: Any) {
-        print("追加ボタン押下")
+    // Cancel Button
+    @IBAction func cancelButtonAction(_ sender: Any) {
+        print("キャンセルボタン")
+        self.dismiss(animated: true, completion: nil)
     }
     
+    // Complete Button
+    @IBAction func addCompleteAction(_ sender: Any) {
+        print("完了ボタン")
+    }
 }
