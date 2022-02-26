@@ -10,12 +10,20 @@ import UIKit
 
 class NewGroupAddTVController: UITableViewController {
     
+    
     @IBOutlet weak var compleateButton: UIBarButtonItem!
+        
+    @IBOutlet weak var addTextFiled: UITextField!
     
-    @IBOutlet weak var newAddText: UIView!
+    // color Cell
+    @IBOutlet weak var colorCell: UITableViewCell!
+    // color Cell SubView
+    @IBOutlet weak var cellView: UIView!
     
-    let sections = ["1","2","3"]
-
+    let x:Double = 9.0
+    let y:Double = 10.0
+    var cellWidth: Double = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,72 +32,94 @@ class NewGroupAddTVController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 2
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 1
+        //self.initRoundCorners()
     }
     
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-//        // Configure the cell...
-//        return cell
-//    }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.initRoundCorners()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     @IBAction func cancelButtonAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+
+    @IBAction func completButtonAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    // Color Button Settings
+    private func initRoundCorners() {
+//        print("cellViewheigth: \(self.cellView.frame.height)")
+//        print("cellW: \(Double(self.cellView.frame.width))")
+        // ( フレームの幅 - ( 間隔 * 7個 ) ) = 四角形の合計 / 6個 = 1つの四角形サイズ
+        let cw = ( Double(self.cellView.frame.width) - ( self.x * 7.0 ) ) / 6.0
+        print("cw: \(cw)")
+        var interval = self.x
+        // 6個の丸ボタンを作る
+        for i in 1...6 {
+            if (i != 1) {
+                interval = interval + self.x
+             }
+//            print("index: \(i)  interval: \(interval)")
+            // ベースの丸
+            let baseCircle = UIView()
+            baseCircle.frame = CGRect(x: interval, y: self.y, width: cw, height: cw)
+            baseCircle.layer.masksToBounds = true
+            baseCircle.layer.cornerRadius = cw / 2
+            baseCircle.layer.backgroundColor = UIColor.gray.cgColor
+            
+            // 2個目中の丸
+            let inCw = cw - 6.0
+            let innerCircle = UIView()
+            innerCircle.frame = CGRect(x: 3.0, y: 3.0, width: inCw, height: inCw)
+            innerCircle.layer.masksToBounds = true
+            innerCircle.layer.cornerRadius = inCw / 2
+            // ダークモード判定
+            if (UITraitCollection.current.userInterfaceStyle == .dark) {
+                // ベースの丸と2個目の丸・色設定
+//                baseCircle.layer.backgroundColor = UIColor.systemGray5.cgColor
+                innerCircle.layer.backgroundColor = UIColor.systemGray5.cgColor
+            } else {
+                // ベースの丸と2個目の丸・色設定
+//                baseCircle.layer.backgroundColor = UIColor.white.cgColor
+                innerCircle.layer.backgroundColor = UIColor.white.cgColor
+            }
+            
+            // 1個目中の丸ボタン
+//            let btCw = inCw - 4.0
+//            let button = UIButton()
+//            button.frame = CGRect(x: 2.0, y: 2.0, width: btCw, height: btCw)
+//            button.layer.masksToBounds = true
+//            button.layer.cornerRadius = btCw / 2
+//            button.layer.backgroundColor = UIColor.green.cgColor
+//            innerCircle.addSubview(button)
+            
+            baseCircle.addSubview(innerCircle)
+            cellView.addSubview(baseCircle)
+            interval = interval + cw
+        }
+        
+        let yy = (self.y * 2) + cw
+        interval = self.x
+        // 2段目のボタン
+        for i in 1...6 {
+            if (i != 1) {
+                interval = interval + self.x
+             }
+//            print("index: \(i)  interval: \(interval)")
+            let baseCircle = UIView()
+            baseCircle.frame = CGRect(x: interval, y: yy, width: cw, height: cw)
+            baseCircle.layer.masksToBounds = true
+            baseCircle.layer.cornerRadius = cw / 2
+            baseCircle.layer.backgroundColor = UIColor.clear.cgColor
+            cellView.addSubview(baseCircle)
+            interval = interval + cw
+        }
+
+        let height = (cw * 2) + (self.y * 3)
+        print("height: \(height)")
+        self.colorCell.frame.size.height = height
     }
 }
